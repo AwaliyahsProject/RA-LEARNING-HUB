@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/*
+ * RA Learning Hub design tokens — warm, soft-pastel, professional.
+ * Text/background pairs are chosen for WCAG AA contrast (≥ 4.5:1).
+ */
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #fbf7f0;
+  --color-surface: #ffffff;
+  --color-line: #ebe4d9;
+  --color-ink: #2b2a28;
+  --color-ink-muted: #625c55;
+
+  --color-brand-50: #eef6f3;
+  --color-brand-100: #d5eae2;
+  --color-brand-200: #abd4c6;
+  --color-brand-500: #3e8e7e;
+  --color-brand-600: #2f7566;
+  --color-brand-700: #255e52;
+  --color-brand-800: #1c4840;
+
+  --color-accent-50: #fff4ea;
+  --color-accent-100: #fde3cc;
+  --color-accent-400: #f0a974;
+  --color-accent-700: #9a5320;
+
+  --color-sky-soft: #e8f1fb;
+  --color-lilac-soft: #f1ecfa;
+
+  --color-danger-50: #fdeeee;
+  --color-danger-600: #b4383a;
+  --color-success-50: #edf7ef;
+  --color-success-700: #2e6b3a;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 1px 2px rgb(43 42 40 / 0.04), 0 4px 16px rgb(43 42 40 / 0.06);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
