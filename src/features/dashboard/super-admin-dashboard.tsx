@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Building2, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
@@ -18,23 +19,32 @@ async function getPlatformCounts() {
 export async function SuperAdminDashboard() {
   const counts = await getPlatformCounts();
   const stats = [
-    { label: "Sekolah terdaftar", value: counts.schools, icon: Building2 },
-    { label: "Pengguna", value: counts.users, icon: Users },
+    { label: "Sekolah terdaftar", value: counts.schools, icon: Building2, href: "/admin/sekolah" },
+    { label: "Pengguna", value: counts.users, icon: Users, href: null },
   ];
 
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      {stats.map(({ label, value, icon: Icon }) => (
-        <Card key={label} className="flex items-center gap-4">
-          <span className="grid size-12 place-items-center rounded-2xl bg-brand-50 text-brand-600">
-            <Icon aria-hidden className="size-6" />
-          </span>
-          <div>
-            <p className="text-sm text-ink-muted">{label}</p>
-            <p className="text-2xl font-bold">{value ?? "—"}</p>
-          </div>
-        </Card>
-      ))}
+      {stats.map(({ label, value, icon: Icon, href }) => {
+        const card = (
+          <Card className={href ? "flex items-center gap-4 hover:border-brand-200" : "flex items-center gap-4"}>
+            <span className="grid size-12 place-items-center rounded-2xl bg-brand-50 text-brand-600">
+              <Icon aria-hidden className="size-6" />
+            </span>
+            <div>
+              <p className="text-sm text-ink-muted">{label}</p>
+              <p className="text-2xl font-bold">{value ?? "—"}</p>
+            </div>
+          </Card>
+        );
+        return href ? (
+          <Link key={label} href={href} className="block rounded-[var(--radius-card)]">
+            {card}
+          </Link>
+        ) : (
+          <div key={label}>{card}</div>
+        );
+      })}
     </div>
   );
 }

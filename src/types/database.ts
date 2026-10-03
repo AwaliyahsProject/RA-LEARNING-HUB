@@ -40,6 +40,9 @@ type ProfileRow = AuditColumns & {
   role: Database["public"]["Enums"]["user_role"];
   school_id: string | null;
   is_active: boolean;
+  invited_at: string | null;
+  invited_by: string | null;
+  joined_at: string | null;
 };
 
 export type Database = {

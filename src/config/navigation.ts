@@ -70,7 +70,7 @@ const teacherNav: NavGroup[] = [
       { label: "Export", href: "/laporan/export", icon: FileDown, ready: false },
     ],
   },
-  { label: null, items: [{ label: "Profil", href: "/profil", icon: UserRound, ready: false }] },
+  { label: null, items: [{ label: "Profil Saya", href: "/profil", icon: UserRound, ready: true }] },
 ];
 
 const schoolAdminNav: NavGroup[] = [
@@ -79,7 +79,7 @@ const schoolAdminNav: NavGroup[] = [
     label: "Sekolah",
     items: [
       { label: "Profil Sekolah", href: "/sekolah", icon: School, ready: false },
-      { label: "Guru", href: "/sekolah/guru", icon: UserRound, ready: false },
+      { label: "Guru & Admin", href: "/sekolah/guru", icon: UserRound, ready: true },
       { label: "Siswa", href: "/sekolah/siswa", icon: Users, ready: false },
       { label: "Kelas", href: "/sekolah/kelas", icon: Layers, ready: false },
       { label: "Kurikulum", href: "/sekolah/kurikulum", icon: Palette, ready: false },
@@ -93,7 +93,13 @@ const schoolAdminNav: NavGroup[] = [
       { label: "Laporan", href: "/monitoring/laporan", icon: BarChart3, ready: false },
     ],
   },
-  { label: null, items: [{ label: "Pengaturan", href: "/pengaturan", icon: Settings, ready: false }] },
+  {
+    label: null,
+    items: [
+      { label: "Profil Saya", href: "/profil", icon: UserRound, ready: true },
+      { label: "Pengaturan", href: "/pengaturan", icon: Settings, ready: false },
+    ],
+  },
 ];
 
 const superAdminNav: NavGroup[] = [
@@ -101,7 +107,7 @@ const superAdminNav: NavGroup[] = [
   {
     label: "Platform",
     items: [
-      { label: "Sekolah", href: "/admin/sekolah", icon: Building2, ready: false },
+      { label: "Sekolah", href: "/admin/sekolah", icon: Building2, ready: true },
       { label: "Pengguna", href: "/admin/pengguna", icon: Users, ready: false },
     ],
   },
@@ -117,7 +123,13 @@ const superAdminNav: NavGroup[] = [
       { label: "Pustaka Media", href: "/admin/media", icon: Library, ready: false },
     ],
   },
-  { label: null, items: [{ label: "Pengaturan Sistem", href: "/admin/pengaturan", icon: Settings, ready: false }] },
+  {
+    label: null,
+    items: [
+      { label: "Profil Saya", href: "/profil", icon: UserRound, ready: true },
+      { label: "Pengaturan Sistem", href: "/admin/pengaturan", icon: Settings, ready: false },
+    ],
+  },
 ];
 
 export const NAVIGATION: Record<UserRole, NavGroup[]> = {

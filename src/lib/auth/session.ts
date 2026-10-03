@@ -73,3 +73,8 @@ export function canAccessApp(profile: CurrentProfile): boolean {
   if (!profile.isActive) return false;
   return profile.role === "super_admin" || profile.schoolId !== null;
 }
+
+/** Shape used by pure permission checks (src/features/members/permissions.ts). */
+export function toActor(profile: CurrentProfile) {
+  return { id: profile.id, role: profile.role, schoolId: profile.schoolId, isActive: profile.isActive };
+}

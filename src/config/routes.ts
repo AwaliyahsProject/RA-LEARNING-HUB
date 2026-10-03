@@ -2,7 +2,7 @@ export const LOGIN_PATH = "/login";
 export const HOME_PATH = "/dashboard";
 
 /** Routes reachable without a session. Everything else requires login. */
-const PUBLIC_PATHS = [LOGIN_PATH, "/auth"];
+const PUBLIC_PATHS = [LOGIN_PATH, "/lupa-sandi", "/auth"];
 
 export function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

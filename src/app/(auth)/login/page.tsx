@@ -16,12 +16,19 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const configured = isSupabaseConfigured();
   if (configured && (await getCurrentProfile())) redirect(HOME_PATH);
 
-  const { next } = await searchParams;
+  const { next, pesan } = await searchParams;
 
   return (
     <Card className="p-6 sm:p-8">
       <h1 className="text-2xl font-bold">Assalamu&apos;alaikum 👋</h1>
       <p className="mt-1 mb-6 text-ink-muted">Masuk untuk merencanakan dan mendokumentasikan pembelajaran.</p>
+
+      {pesan === "link-tidak-valid" ? (
+        <Alert tone="error" className="mb-4">
+          Tautan sudah kedaluwarsa atau sudah pernah dipakai. Minta admin mengirim ulang undangan, atau gunakan
+          &quot;Lupa kata sandi?&quot;.
+        </Alert>
+      ) : null}
 
       {configured ? (
         <LoginForm next={typeof next === "string" ? next : undefined} />

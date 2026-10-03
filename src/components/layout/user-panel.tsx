@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { signOut } from "@/features/auth/actions";
 import { ROLE_LABELS } from "@/lib/auth/roles";
@@ -7,7 +8,7 @@ export function UserPanel({ profile }: { profile: CurrentProfile }) {
   const initial = profile.fullName.trim().charAt(0).toUpperCase() || "?";
   return (
     <div className="rounded-2xl bg-canvas p-3">
-      <div className="flex items-center gap-3">
+      <Link href="/profil" className="flex items-center gap-3 rounded-xl hover:opacity-80" aria-label={`Profil Saya: ${profile.fullName}`}>
         <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-accent-100 font-bold text-accent-700">
           {initial}
         </span>
@@ -15,7 +16,7 @@ export function UserPanel({ profile }: { profile: CurrentProfile }) {
           <p className="truncate text-sm font-semibold">{profile.fullName}</p>
           <p className="truncate text-xs text-ink-muted">{ROLE_LABELS[profile.role]}</p>
         </div>
-      </div>
+      </Link>
       <form action={signOut} className="mt-3">
         <button
           type="submit"

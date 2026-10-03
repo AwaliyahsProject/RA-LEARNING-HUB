@@ -16,9 +16,11 @@ describe("safeRedirectPath", () => {
 });
 
 describe("isPublicPath", () => {
-  it("allows login and auth callbacks only", () => {
+  it("allows login, forgot-password and auth callbacks only", () => {
     expect(isPublicPath("/login")).toBe(true);
     expect(isPublicPath("/auth/confirm")).toBe(true);
+    expect(isPublicPath("/lupa-sandi")).toBe(true);
+    expect(isPublicPath("/atur-sandi")).toBe(false);
     expect(isPublicPath("/dashboard")).toBe(false);
     expect(isPublicPath("/loginx")).toBe(false);
     expect(isPublicPath("/")).toBe(false);

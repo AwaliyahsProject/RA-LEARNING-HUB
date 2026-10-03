@@ -40,13 +40,13 @@ export function NavList({ role, onNavigate }: { role: UserRole; onNavigate?: () 
                       className={cn(itemClass, !active && "hover:bg-canvas")}
                     >
                       <Icon aria-hidden className="size-5 shrink-0" />
-                      {label}
+                      <span className="truncate">{label}</span>
                     </Link>
                   ) : (
                     <span aria-disabled="true" className={cn(itemClass, "cursor-default text-ink-muted")}>
                       <Icon aria-hidden className="size-5 shrink-0 opacity-70" />
-                      {label}
-                      <span className="ml-auto rounded-full bg-canvas px-2 py-0.5 text-[11px] font-semibold">Segera</span>
+                      <span className="truncate">{label}</span>
+                      <span className="ml-auto shrink-0 rounded-full bg-canvas px-2 py-0.5 text-[11px] font-semibold">Segera</span>
                     </span>
                   )}
                 </li>

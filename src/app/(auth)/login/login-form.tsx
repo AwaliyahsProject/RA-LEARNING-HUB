@@ -1,21 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { LogIn } from "lucide-react";
 import { signIn } from "@/features/auth/actions";
 import type { SignInState } from "@/features/auth/schemas";
 import { Alert } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { FormField, TextInput } from "@/components/ui/form-field";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const initialState: SignInState = { status: "idle" };
 
-const inputClass =
-  "block min-h-12 w-full rounded-xl border bg-surface px-4 text-base text-ink placeholder:text-ink-muted/70 " +
-  "focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200";
-
 export function LoginForm({ next }: { next?: string }) {
-  const [state, formAction, pending] = useActionState(signIn, initialState);
+  const [state, formAction] = useActionState(signIn, initialState);
   const errors = state.fieldErrors ?? {};
 
   return (
@@ -23,55 +20,33 @@ export function LoginForm({ next }: { next?: string }) {
       {state.message ? <Alert tone="error">{state.message}</Alert> : null}
       {next ? <input type="hidden" name="next" value={next} /> : null}
 
-      <div>
-        <label htmlFor="email" className="mb-1.5 block text-sm font-semibold">
-          Email
-        </label>
-        <input
+      <FormField id="email" label="Email" error={errors.email}>
+        <TextInput
           id="email"
-          name="email"
           type="email"
           inputMode="email"
           autoComplete="email"
           required
           defaultValue={state.email}
-          aria-invalid={Boolean(errors.email)}
-          aria-describedby={errors.email ? "email-error" : undefined}
-          className={cn(inputClass, errors.email ? "border-danger-600" : "border-line")}
+          error={errors.email}
           placeholder="nama@sekolah.sch.id"
         />
-        {errors.email ? (
-          <p id="email-error" className="mt-1.5 text-sm text-danger-600">
-            {errors.email}
-          </p>
-        ) : null}
+      </FormField>
+
+      <FormField id="password" label="Kata sandi" error={errors.password}>
+        <TextInput id="password" type="password" autoComplete="current-password" required error={errors.password} />
+      </FormField>
+
+      <div className="flex justify-end">
+        <Link href="/lupa-sandi" className="text-sm font-semibold text-brand-700 hover:underline">
+          Lupa kata sandi?
+        </Link>
       </div>
 
-      <div>
-        <label htmlFor="password" className="mb-1.5 block text-sm font-semibold">
-          Kata sandi
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          aria-invalid={Boolean(errors.password)}
-          aria-describedby={errors.password ? "password-error" : undefined}
-          className={cn(inputClass, errors.password ? "border-danger-600" : "border-line")}
-        />
-        {errors.password ? (
-          <p id="password-error" className="mt-1.5 text-sm text-danger-600">
-            {errors.password}
-          </p>
-        ) : null}
-      </div>
-
-      <Button type="submit" size="lg" className="w-full" disabled={pending} aria-busy={pending}>
+      <SubmitButton size="lg" className="w-full" pendingLabel="Sedang masuk…">
         <LogIn aria-hidden className="size-5" />
-        {pending ? "Sedang masuk…" : "Masuk"}
-      </Button>
+        Masuk
+      </SubmitButton>
     </form>
   );
 }
