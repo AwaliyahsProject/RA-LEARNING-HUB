@@ -1,0 +1,13 @@
+<!-- Supabase Auth "Invite user" template. Copy to Dashboard → Authentication → Email Templates for cloud projects. -->
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#2b2a28">
+  <h2 style="color:#255e52">Assalamu'alaikum, {{ .Data.full_name }}</h2>
+  <p>Anda diundang bergabung ke <strong>RA Learning Hub</strong> — aplikasi perencanaan pembelajaran, asesmen, dan portofolio RA.</p>
+  <p>Klik tombol di bawah untuk membuat kata sandi dan mulai menggunakan aplikasi:</p>
+  <p style="margin:28px 0">
+    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite"
+       style="background:#2f7566;color:#ffffff;padding:14px 22px;border-radius:12px;text-decoration:none;font-weight:bold">
+      Terima undangan
+    </a>
+  </p>
+  <p style="color:#625c55;font-size:14px">Tautan ini hanya bisa dipakai sekali dan akan kedaluwarsa. Jika Anda tidak merasa diundang, abaikan email ini.</p>
+</div>

@@ -1,0 +1,12 @@
+<!-- Supabase Auth "Reset password" template. Copy to Dashboard → Authentication → Email Templates for cloud projects. -->
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#2b2a28">
+  <h2 style="color:#255e52">Atur ulang kata sandi</h2>
+  <p>Kami menerima permintaan untuk mengatur ulang kata sandi akun RA Learning Hub Anda.</p>
+  <p style="margin:28px 0">
+    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery"
+       style="background:#2f7566;color:#ffffff;padding:14px 22px;border-radius:12px;text-decoration:none;font-weight:bold">
+      Buat kata sandi baru
+    </a>
+  </p>
+  <p style="color:#625c55;font-size:14px">Jika Anda tidak meminta ini, abaikan email ini — kata sandi Anda tidak berubah.</p>
+</div>
