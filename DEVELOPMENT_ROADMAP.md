@@ -22,8 +22,8 @@ dan fitur lama tetap berfungsi.
 | Fase | Lingkup | Status |
 | --- | --- | --- |
 | 1 | Fondasi: scaffold, design system, AppShell, Supabase client, proxy, migrasi fondasi + RLS, tes, CI, dokumentasi | ✅ Selesai |
-| 2 | Auth & role: undangan (Super Admin → Kepala Sekolah → Guru), terima undangan dan set kata sandi, lupa sandi, halaman profil, bootstrap super admin | ⏭️ Berikutnya |
-| 3 | Sekolah, tahun ajaran, guru, kelas A/B (+ `class_teachers`) | 🗓️ |
+| 2 | Auth & role: undangan (Super Admin → Kepala Sekolah → Guru), terima undangan dan set kata sandi, lupa sandi, halaman profil, kelola status anggota | ✅ Selesai |
+| 3 | Profil sekolah (edit oleh Kepala Sekolah), tahun ajaran, kelas A/B (+ `class_teachers`) | ⏭️ Berikutnya |
 | 4 | Peserta didik + riwayat kelas | 🗓️ |
 | 5 | Kurikulum: domain (KMA), tema, subtema, topik, tujuan, content pack + seed demo | 🗓️ |
 | 6 | Content engine: aktivitas, varian A/B, LKPD, aktivitas custom sekolah | 🗓️ |
@@ -41,8 +41,8 @@ dan fitur lama tetap berfungsi.
 
 - [ ] **Sebelum Phase 5:** daftar domain/elemen perkembangan dan rumusan
   capaian sesuai KMA RA yang dipakai (nomor KMA atau dokumen sumber).
-- [ ] **Sebelum Phase 2:** penyedia email (SMTP) untuk undangan di production.
-  Bawaan Supabase dibatasi beberapa email per jam.
+- [ ] **Sebelum go-live:** penyedia email (SMTP) untuk undangan di production.
+  Bawaan Supabase dibatasi beberapa email per jam. Kode tidak perlu diubah.
 - [ ] **Sebelum Phase 12:** format rapor yang diinginkan (contoh dokumen).
 - [ ] **Sebelum Phase 14:** penyedia AI dan batas biaya.
 

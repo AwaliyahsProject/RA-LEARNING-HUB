@@ -21,9 +21,9 @@ Legenda status: ✅ sudah ada di migrasi · 🗓️ direncanakan (fase di kurung
   disimpan sebagai **tabel data**.
 - RLS **aktif di setiap tabel** `public`. `anon` tidak diberi hak apa pun.
 
-## 2. Fondasi (Phase 1) ✅
+## 2. Fondasi (Phase 1–2) ✅
 
-Migrasi: `20261003000100_foundation.sql`
+Migrasi: `20261003000100_foundation.sql`, `20261003000200_invitations.sql`
 
 ### `schools` ✅ — akar tenant
 `id, name, npsn (8 digit), nsm (12 digit), address, village, district, regency,
@@ -39,8 +39,22 @@ is_active, …audit`
   diberikan via metadata — hanya lewat SQL oleh pemilik platform.
 - Trigger `profiles_guard_update` mencegah eskalasi (lihat SECURITY.md).
 
+Kolom status undangan (Phase 2, migrasi `20261003000200_invitations.sql`):
+`invited_at` (dari `auth.users.invited_at`), `invited_by` (dari `app_metadata`),
+`joined_at` (dari `auth.users.email_confirmed_at`; NULL = menunggu). Ketiganya
+dikelola trigger dan tidak bisa diubah pengguna.
+
 ### Enum `user_role` ✅
 `super_admin`, `school_admin`, `teacher`
+
+### Trigger pada `auth.users` ✅
+| Trigger | Fungsi |
+| --- | --- |
+| `on_auth_user_created` | buat profil; terapkan `app_metadata` bila sudah ada |
+| `on_auth_user_updated` | sinkron `email`, `invited_at`, `joined_at`; terapkan `app_metadata` **sekali** (selama profil belum punya sekolah) |
+
+> GoTrue menulis `app_metadata` lewat UPDATE setelah INSERT. Karena itu
+> penugasan juga berjalan saat UPDATE. Ini ditemukan saat uji di Supabase asli.
 
 ### Fungsi helper (skema `private`) ✅
 | Fungsi | Hasil |
@@ -59,7 +73,7 @@ is_active, …audit`
 - `class_teachers` — `class_id, teacher_id, role ('wali'|'pendamping')` → dasar RLS "guru hanya kelasnya".
 - `students` — `school_id, nis, nisn, full_name, nickname, gender, birth_place, birth_date, parent_name, parent_phone, address, photo_url, status`.
 - `student_enrollments` — `student_id, class_id, academic_year_id` (riwayat kelas per tahun ajaran; spesifikasi awal menaruh `class_id` di `students`, dipisah agar kenaikan kelas tidak menimpa riwayat).
-- `school_invitations` — jejak undangan guru (email, role, status, invited_by).
+- ~~`school_invitations`~~ — tidak diperlukan; status undangan ada di `profiles` (Phase 2).
 
 ### Konfigurasi pembelajaran (Phase 5 & 7)
 - `learning_models` — `school_id NULL` = bawaan sistem (Kelompok, Area, Sentra, Custom); sekolah bisa menambah.

@@ -28,11 +28,14 @@
   - role dan sekolah diambil dari `raw_app_meta_data`, yang hanya bisa ditulis
     service role;
   - `super_admin` tidak pernah diberikan via metadata.
-- **Guard kolom** `profiles_guard_update`:
+- **Guard kolom** `profiles_guard_update` (sejak Phase 2 `SECURITY INVOKER`:
+  aturan berlaku bila update dijalankan role `authenticated`; tulisan sistem dari
+  trigger auth/service role dipercaya):
   - pengguna biasa tidak bisa mengubah `id`, `school_id`, atau `email`;
   - hanya `school_admin` yang bisa mengubah `role`/`is_active` milik orang lain
     di sekolahnya, dan tidak pernah ke/dari `super_admin`;
-  - tidak ada yang bisa mengubah role atau status miliknya sendiri.
+  - tidak ada yang bisa mengubah role atau status miliknya sendiri;
+  - `invited_at`, `invited_by`, `joined_at` hanya diubah sistem.
 - **Signup publik dimatikan** (`supabase/config.toml`): akun hanya dibuat lewat
   undangan admin (Phase 2).
 - **Proxy** hanya me-refresh sesi dan me-redirect. Otorisasi dilakukan oleh
@@ -44,10 +47,31 @@
 - **Service role** hanya ada di `src/lib/supabase/admin.ts` (`server-only`),
   tanpa prefiks `NEXT_PUBLIC_`.
 
+## Undangan & kata sandi (Phase 2)
+
+- Undangan hanya lewat Server Action yang memanggil `requireRole()` +
+  `canInvite()` sebelum memakai service role. Kepala Sekolah hanya ke
+  sekolahnya sendiri; tidak ada yang bisa mengundang `super_admin`.
+- Sebelum mengundang, email dicek ke semua sekolah. Supabase diam-diam
+  *mengirim ulang* undangan untuk email yang belum diterima, sehingga tanpa cek
+  ini akun bisa tampak "terundang" padahal tetap di sekolah lain.
+- Jika penugasan `app_metadata` gagal, akun yang baru dibuat dihapus agar tidak
+  ada akun yatim.
+- Kirim ulang dan aktifkan/nonaktifkan: target dibaca dengan client pengguna
+  (RLS) lalu dicek `canManageMember()`. Update `is_active` memakai client
+  pengguna, sehingga RLS dan guard memeriksa ulang. E2E memastikan form yang
+  dimanipulasi untuk menargetkan guru sekolah lain ditolak.
+- `/auth/confirm` memvalidasi parameter dengan Zod, menghapus sesi lama sebelum
+  `verifyOtp`, dan tautan yang sudah dipakai atau dipalsukan diarahkan ke login
+  dengan pesan ramah.
+- Lupa kata sandi selalu menjawab sama (tidak membocorkan email terdaftar).
+  Kata sandi minimal 8 karakter berisi huruf dan angka, divalidasi di
+  server (Zod) dan Supabase Auth (`config.toml`).
+
 ## Tes keamanan
 
-`npm run db:test` menjalankan `supabase/rls-tests/001_tenant_isolation.sql`,
-yang mencakup:
+`npm run db:test` menjalankan `supabase/rls-tests/*.sql` (46 assertion), yang
+mencakup:
 - `anon` ditolak;
 - guru A hanya melihat sekolah dan rekan dari Sekolah A;
 - guru A tidak bisa mengubah atau menghapus data Sekolah B;

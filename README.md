@@ -6,7 +6,7 @@ Platform pembelajaran terintegrasi untuk Raudhatul Athfal (RA) / TK Islam.
 Aplikasi ini menghubungkan rantai kurikulum → tema → buku → aktivitas → RPPH →
 asesmen → portofolio → rapor dalam satu aplikasi multi-sekolah (multi-tenant).
 
-> Status: **Phase 1 (Fondasi) selesai.** Lihat
+> Status: **Phase 2 (Autentikasi & Peran) selesai.** Lihat
 > [DEVELOPMENT_ROADMAP.md](DEVELOPMENT_ROADMAP.md).
 
 ## Teknologi
@@ -43,7 +43,16 @@ npx supabase status          # salin API URL & publishable/anon key ke .env.loca
 3. Terapkan migrasi: `npx supabase link --project-ref <ref>` lalu
    `npx supabase db push`.
 4. **Authentication → Sign In / Providers**: matikan *Allow new users to sign up*
-   (aplikasi ini hanya menerima undangan).
+   (aplikasi ini hanya menerima undangan). Biarkan provider **Email** tetap aktif.
+5. **Authentication → URL Configuration**: isi *Site URL* dengan alamat aplikasi
+   (mis. `https://ra-learning-hub.vercel.app`).
+6. **Authentication → Email Templates**: salin isi `supabase/templates/invite.html`
+   ke template *Invite user* dan `supabase/templates/recovery.html` ke *Reset
+   password*. **Wajib** — template bawaan Supabase tidak cocok dengan alur login
+   server-side aplikasi ini (tautan harus menuju `/auth/confirm?token_hash=…`).
+7. **Project Settings → Authentication → SMTP**: pasang penyedia email sendiri
+   untuk production. Email bawaan Supabase hanya untuk uji coba (dibatasi
+   beberapa email per jam).
 
 ### Membuat Super Admin pertama
 
@@ -57,7 +66,16 @@ Super admin tidak bisa dibuat lewat aplikasi atau metadata. Caranya:
    where email = 'email-anda@contoh.id';
    ```
 
-Fitur undangan Kepala Sekolah dan guru dibangun di Phase 2.
+### Alur akun
+
+1. Super Admin → **Sekolah → Tambah Sekolah**, lalu undang Kepala Sekolah dari
+   halaman detail sekolah.
+2. Kepala Sekolah menerima email → membuat kata sandi → **Guru & Admin** →
+   undang guru.
+3. Lupa kata sandi: tautan **Lupa kata sandi?** di halaman masuk.
+
+Saat memakai Supabase lokal, email yang "terkirim" bisa dilihat di Mailpit:
+<http://127.0.0.1:54324>.
 
 ## Script
 

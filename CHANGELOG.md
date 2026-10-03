@@ -4,6 +4,29 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 2 — Autentikasi & Peran (2026-10-03)
+
+#### Ditambahkan
+- Super Admin: daftar sekolah (cari + halaman), tambah sekolah (NSM/NPSN
+  tervalidasi, zona waktu), detail sekolah dengan anggota & undangan Kepala Sekolah.
+- Kepala Sekolah: halaman **Guru & Admin**: undang guru/admin, kirim ulang
+  undangan, nonaktifkan (dengan konfirmasi) / aktifkan kembali.
+- Alur email: `/auth/confirm` (token_hash), halaman **Atur Kata Sandi**
+  (undangan & reset), **Lupa kata sandi**, template email Bahasa Indonesia.
+- **Profil Saya**: ubah nama dan kata sandi; tautan profil di panel pengguna.
+- Komponen form bersama: `FormField`, `TextInput`, `SelectInput`,
+  `SubmitButton`, `FormMessage`, `ConfirmDialog`; helper `FormState`,
+  `friendlyDbError`.
+- Migrasi `20261003000200_invitations.sql`: `profiles.invited_at`,
+  `invited_by`, `joined_at` + sinkronisasi dari `auth.users`.
+- Tes: 46 assertion SQL, 30 unit test, 39 cek E2E (Supabase lokal + Mailpit).
+
+#### Diperbaiki
+- Mengundang email yang masih tertunda tidak lagi "berhasil" diam-diam
+  (Supabase mengirim ulang alih-alih menolak).
+- Guard profil tidak lagi bergantung pada tidak adanya JWT, sehingga update
+  sistem dari trigger auth tidak terblokir.
+
 ### Phase 1 — Fondasi (2026-10-03)
 
 #### Ditambahkan
