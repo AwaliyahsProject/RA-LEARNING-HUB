@@ -23,8 +23,8 @@ dan fitur lama tetap berfungsi.
 | --- | --- | --- |
 | 1 | Fondasi: scaffold, design system, AppShell, Supabase client, proxy, migrasi fondasi + RLS, tes, CI, dokumentasi | ✅ Selesai |
 | 2 | Auth & role: undangan (Super Admin → Kepala Sekolah → Guru), terima undangan dan set kata sandi, lupa sandi, halaman profil, kelola status anggota | ✅ Selesai |
-| 3 | Profil sekolah (edit oleh Kepala Sekolah), tahun ajaran, kelas A/B (+ `class_teachers`) | ⏭️ Berikutnya |
-| 4 | Peserta didik + riwayat kelas | 🗓️ |
+| 3 | Profil sekolah + logo, tahun ajaran, kelas A/B, wali kelas & pendamping | ✅ Selesai |
+| 4 | Peserta didik + riwayat kelas; guru hanya melihat siswa kelasnya | ⏭️ Berikutnya |
 | 5 | Kurikulum: domain (KMA), tema, subtema, topik, tujuan, content pack + seed demo | 🗓️ |
 | 6 | Content engine: aktivitas, varian A/B, LKPD, aktivitas custom sekolah | 🗓️ |
 | 7 | Model pembelajaran: Kelompok/Area/Sentra/Custom, sentra/area sekolah, implementasi aktivitas | 🗓️ |

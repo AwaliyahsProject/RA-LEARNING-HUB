@@ -65,12 +65,54 @@ dikelola trigger dan tidak bisa diubah pengguna.
 | `private.is_school_admin_of(school uuid)` | admin sekolah tersebut? |
 | `private.is_member_of(school uuid)` | anggota aktif sekolah tersebut? |
 
-## 3. Rencana skema (fase berikutnya) 🗓️
+| `private.teaches_class(class uuid)` | pengguna aktif ini ditugaskan di kelas tersebut? (dipakai Phase 4+) |
+| `private.path_school_id(name text)` | segmen pertama path Storage sebagai uuid (NULL bila bukan uuid) |
 
-### Sekolah & akademik (Phase 3–4)
-- `academic_years` — `school_id, name, start_date, end_date, is_active` (unik: satu aktif per sekolah via partial unique index).
-- `classes` — `school_id, academic_year_id, name, level ('A'|'B'), learning_model_id, homeroom_teacher_id`.
-- `class_teachers` — `class_id, teacher_id, role ('wali'|'pendamping')` → dasar RLS "guru hanya kelasnya".
+## 3. Struktur akademik (Phase 3) ✅
+
+Migrasi: `20261005000100_academic_structure.sql`
+
+**Integritas tenant dengan FK komposit:** tabel anak menyimpan `school_id` dan
+menunjuk induknya lewat `(id, school_id)`. Database sendiri menolak relasi lintas
+sekolah, misalnya guru Sekolah B di kelas Sekolah A, atau kelas yang menunjuk
+tahun ajaran sekolah lain.
+
+### `academic_years` ✅
+`id, school_id, name ('2026/2027'), start_date, end_date, is_active, …audit`
+- `end_date > start_date`; nama unik per sekolah.
+- **Satu tahun ajaran aktif per sekolah**: partial unique index
+  `academic_years_one_active_idx`.
+- RPC `public.set_active_academic_year(target uuid)` (SECURITY INVOKER) mengganti
+  tahun aktif secara atomik.
+- Tidak bisa dihapus selama masih punya kelas (FK restrict).
+
+### `classes` ✅
+`id, school_id, academic_year_id, name, level (enum class_level: A|B), …audit`
+- FK komposit `(academic_year_id, school_id)` → `academic_years (id, school_id)`.
+- Nama unik per tahun ajaran.
+- `learning_model_id` **ditunda ke Phase 7** bersama tabel `learning_models`.
+
+### `class_teachers` ✅
+`id, school_id, class_id, teacher_id, role (enum class_teacher_role: homeroom|assistant), …audit`
+- FK komposit ke `classes (id, school_id)` (cascade) dan `profiles (id, school_id)`.
+- Satu guru sekali per kelas; **maksimal satu wali kelas** (partial unique index).
+- Menggantikan kolom `homeroom_teacher_id` di spesifikasi awal agar kelas bisa
+  punya wali + beberapa pendamping.
+
+### RLS
+Baca: anggota sekolah (dan super admin). Tulis: `school_admin` sekolah itu (dan
+super admin).
+
+### Storage: bucket `school-logos` ✅
+Bucket **publik** karena logo adalah informasi publik dan dipakai di dokumen
+cetak. Batas 1 MB; tipe PNG/JPEG/WebP. Path: `{school_id}/logo-{timestamp}.{ext}`.
+`schools.logo_url` menyimpan **path di bucket**, bukan URL penuh (lihat
+`src/features/schools/storage.ts`). Tulis/hapus hanya `school_admin` untuk folder
+sekolahnya. File sensitif (foto siswa, portofolio) akan memakai bucket privat.
+
+## 4. Rencana skema (fase berikutnya) 🗓️
+
+### Peserta didik (Phase 4)
 - `students` — `school_id, nis, nisn, full_name, nickname, gender, birth_place, birth_date, parent_name, parent_phone, address, photo_url, status`.
 - `student_enrollments` — `student_id, class_id, academic_year_id` (riwayat kelas per tahun ajaran; spesifikasi awal menaruh `class_id` di `students`, dipisah agar kenaikan kelas tidak menimpa riwayat).
 - ~~`school_invitations`~~ — tidak diperlukan; status undangan ada di `profiles` (Phase 2).
@@ -104,13 +146,20 @@ dikelola trigger dan tidak bisa diubah pengguna.
 - `media_files (school_id, bucket, path, mime_type, size_bytes, uploaded_by)`.
 - `report_cards (student_id, academic_year_id, semester, status)` + `report_narratives (report_card_id, domain_id, draft_text, final_text, source 'teacher'|'ai_draft', approved_by, approved_at)`.
 
-## 4. Menjalankan tes database
+## 5. Menjalankan tes database
 
 ```bash
 # Postgres biasa (bukan project Supabase)
 TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres npm run db:test
 ```
 
-Runner membuat database sementara, memasang stub `auth` ala Supabase
+Runner membuat database sementara, memasang stub `auth` dan `storage` ala Supabase
 (`supabase/rls-tests/_harness`), menjalankan semua migrasi, lalu tes di
 `supabase/rls-tests/*.sql`, dan menghapus database tersebut.
+
+## 6. Tipe TypeScript
+
+`src/types/supabase.ts` **di-generate** dari skema lokal dengan
+`npm run db:types` (butuh `npx supabase start`). Jangan diedit manual.
+Jalankan setelah setiap migrasi baru. Tipe khusus aplikasi ada di
+`src/types/database.ts`.

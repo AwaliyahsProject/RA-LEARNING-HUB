@@ -6,7 +6,7 @@ Platform pembelajaran terintegrasi untuk Raudhatul Athfal (RA) / TK Islam.
 Aplikasi ini menghubungkan rantai kurikulum → tema → buku → aktivitas → RPPH →
 asesmen → portofolio → rapor dalam satu aplikasi multi-sekolah (multi-tenant).
 
-> Status: **Phase 2 (Autentikasi & Peran) selesai.** Lihat
+> Status: **Phase 3 (Sekolah, Tahun Ajaran & Kelas) selesai.** Lihat
 > [DEVELOPMENT_ROADMAP.md](DEVELOPMENT_ROADMAP.md).
 
 ## Teknologi
@@ -72,7 +72,9 @@ Super admin tidak bisa dibuat lewat aplikasi atau metadata. Caranya:
    halaman detail sekolah.
 2. Kepala Sekolah menerima email → membuat kata sandi → **Guru & Admin** →
    undang guru.
-3. Lupa kata sandi: tautan **Lupa kata sandi?** di halaman masuk.
+3. Kepala Sekolah melengkapi **Profil Sekolah**, membuat **Tahun Ajaran**, lalu
+   **Kelas** Kelompok A/B dan menugaskan wali kelas serta guru pendamping.
+4. Lupa kata sandi: tautan **Lupa kata sandi?** di halaman masuk.
 
 Saat memakai Supabase lokal, email yang "terkirim" bisa dilihat di Mailpit:
 <http://127.0.0.1:54324>.
@@ -86,6 +88,7 @@ Saat memakai Supabase lokal, email yang "terkirim" bisa dilihat di Mailpit:
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Generate tipe route Next.js + `tsc --noEmit` |
 | `npm test` | Unit test (Vitest) |
+| `npm run db:types` | Generate `src/types/supabase.ts` dari Supabase lokal (setelah migrasi baru) |
 | `npm run db:test` | Migrasi + tes RLS/isolasi tenant di Postgres sementara (`TEST_DATABASE_URL`) |
 
 ## Dokumentasi

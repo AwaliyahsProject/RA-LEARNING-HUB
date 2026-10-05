@@ -4,6 +4,29 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3 — Sekolah, Tahun Ajaran & Kelas (2026-10-05)
+
+#### Ditambahkan
+- **Profil Sekolah** (Kepala Sekolah): identitas, alamat, kontak, zona waktu, dan
+  unggah logo (PNG/JPG/WebP ≤ 1 MB, dicek lewat magic bytes). Logo tampil di
+  app shell.
+- **Tahun Ajaran**: tambah (saran otomatis tahun berjalan), ubah, hapus (bila
+  belum punya kelas), dan jadikan aktif. Tahun pertama otomatis aktif.
+- **Kelas** Kelompok A/B per tahun ajaran; detail kelas dengan wali kelas dan
+  guru pendamping.
+- Dashboard Kepala Sekolah: checklist persiapan yang tercentang otomatis dari
+  data. Dashboard Guru: **Kelas Saya**.
+- Migrasi `20261005000100_academic_structure.sql`: `academic_years`, `classes`,
+  `class_teachers`, enum `class_level` dan `class_teacher_role`, RPC
+  `set_active_academic_year`, helper `teaches_class`, bucket `school-logos` +
+  policy Storage.
+- Tipe DB di-generate (`npm run db:types`).
+- Tes: 74 assertion SQL, 40 unit test, 33 cek E2E Phase 3 (+39 E2E Phase 2 diulang).
+
+#### Diperbaiki
+- Pesan sukses yang hilang bersama baris yang dihapus (hapus tahun ajaran,
+  lepas guru) kini tampil di level halaman/induk.
+
 ### Phase 2 — Autentikasi & Peran (2026-10-03)
 
 #### Ditambahkan

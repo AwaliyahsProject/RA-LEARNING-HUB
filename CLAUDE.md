@@ -9,7 +9,10 @@ sama dengan perubahan kode yang memengaruhinya.
 - Kerjakan per fase (lihat roadmap). Laporkan di akhir fase, lalu tunggu
   persetujuan sebelum fase berikutnya.
 - Skema hanya diubah lewat migrasi **baru** di `supabase/migrations/`. Jangan
-  pernah mengedit migrasi yang sudah ter-push.
+  pernah mengedit migrasi yang sudah ter-push. Setelah migrasi baru, jalankan
+  `npm run db:types` (butuh `npx supabase start`); jangan edit
+  `src/types/supabase.ts` secara manual.
+- Relasi antar data sekolah memakai FK komposit `(id, school_id)`.
 - Setiap tabel baru: RLS aktif, `anon` tanpa hak, kolom audit, `school_id` untuk
   data sekolah, dan skenario baru di `supabase/rls-tests/`.
 - Halaman/action privat wajib memanggil `requireProfile()`/`requireRole()`.

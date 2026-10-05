@@ -68,9 +68,25 @@
   Kata sandi minimal 8 karakter berisi huruf dan angka, divalidasi di
   server (Zod) dan Supabase Auth (`config.toml`).
 
+## Struktur akademik & file (Phase 3)
+
+- **FK komposit `(id, school_id)`**: kelas ↔ tahun ajaran, guru kelas ↔ kelas,
+  dan guru kelas ↔ profil harus berada di sekolah yang sama. Ini dijamin
+  database, dan E2E memastikan form yang dimanipulasi (tahun ajaran atau guru
+  milik sekolah lain) ditolak.
+- `school_id` pada insert selalu diambil dari sesi (`requireRole`), tidak pernah
+  dari form.
+- **Upload logo**: ukuran dicek di browser dan di server (maks 1 MB). Tipe
+  ditentukan dari **magic bytes** (PNG/JPEG/WebP); SVG/HTML yang diganti
+  namanya menjadi `.png` ditolak. Batas ukuran dan tipe juga dipasang di level
+  bucket. Upload memakai client pengguna, sehingga policy Storage ikut berlaku:
+  hanya `school_admin` yang bisa menulis ke folder `{school_id}` sekolahnya
+  sendiri. Nama file berisi timestamp; logo lama dihapus setelah diganti.
+- Server Actions: `bodySizeLimit` 2 MB (`next.config.ts`).
+
 ## Tes keamanan
 
-`npm run db:test` menjalankan `supabase/rls-tests/*.sql` (46 assertion), yang
+`npm run db:test` menjalankan `supabase/rls-tests/*.sql` (74 assertion), yang
 mencakup:
 - `anon` ditolak;
 - guru A hanya melihat sekolah dan rekan dari Sekolah A;
@@ -78,7 +94,10 @@ mencakup:
 - tidak bisa promosi diri atau pindah sekolah;
 - admin A tidak bisa menyentuh Sekolah B dan tidak bisa memberi `super_admin`;
 - akun nonaktif dan akun tanpa sekolah tidak melihat apa pun;
-- super admin melihat semua.
+- super admin melihat semua;
+- tahun ajaran, kelas, dan penugasan guru tidak bisa dibaca atau diubah lintas
+  sekolah; guru tidak bisa membuat kelas atau mengganti tahun aktif;
+- upload logo hanya ke folder sekolah sendiri oleh admin; path tidak valid ditolak.
 
 Suite ini sudah diverifikasi **gagal** ketika sebuah policy sengaja
 dilemahkan.

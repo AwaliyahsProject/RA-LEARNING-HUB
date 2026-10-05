@@ -55,6 +55,9 @@ src/
       anak/…                (fase berikutnya) siswa, asesmen, anekdot, portofolio
       laporan/…             (fase berikutnya)
       profil/               Profil Saya (semua role)
+      sekolah/              Kepala Sekolah: profil sekolah + logo
+      sekolah/tahun-ajaran/ Tahun ajaran (tambah, ubah, aktifkan, hapus)
+      sekolah/kelas/        Kelas Kelompok A/B per tahun ajaran + guru kelas
       sekolah/guru/         Kepala Sekolah: anggota & undangan
       admin/sekolah/        Super Admin: daftar, tambah, detail sekolah + undang Kepala Sekolah
   components/
@@ -67,11 +70,13 @@ src/
     supabase/               server.ts · client.ts · proxy.ts · admin.ts (server-only)
     auth/                   session.ts (DAL) · roles.ts
     forms.ts (FormState, fieldErrorsFrom) · errors.ts (friendlyDbError) · env.ts · datetime.ts · utils.ts
-  types/database.ts         Tipe DB (format `supabase gen types`)
+  types/supabase.ts         Tipe DB hasil generate (`npm run db:types`) — jangan diedit manual
+  types/database.ts         Re-export + tipe aplikasi (UserRole, ClassLevel, SchoolTimezone)
 supabase/
   config.toml               Konfigurasi Supabase CLI (signup dimatikan — invitation only)
   migrations/               Satu-satunya cara mengubah skema
   rls-tests/                Tes SQL isolasi tenant (dijalankan `npm run db:test`)
+  templates/                Template email Auth (undangan, reset sandi)
 scripts/db-test.sh          Runner tes database
 ```
 
@@ -139,6 +144,11 @@ Plus Jakarta Sans. Target sentuh minimal 44px, kontras teks ≥ 4.5:1,
 | 11 | Status undangan disimpan di `profiles` (bukan tabel terpisah) | Disinkronkan dari `auth.users` oleh trigger; tidak perlu membuka `auth.users` ke aplikasi. |
 | 12 | Server Actions + `useActionState`, bukan React Hook Form | Lihat §4. |
 | 13 | Tautan email memakai `token_hash` → `/auth/confirm` | Cocok untuk sesi berbasis cookie (SSR); template email ada di `supabase/templates`. |
+| 14 | FK komposit `(id, school_id)` untuk relasi antar data sekolah | Isolasi tenant dijamin juga oleh integritas data, bukan hanya RLS. |
+| 15 | Wali kelas + pendamping di `class_teachers` (bukan `classes.homeroom_teacher_id`) | Satu kelas bisa punya beberapa guru; dasar akses guru per kelas. |
+| 16 | Logo di bucket publik `school-logos`; isi file dicek lewat magic bytes | Logo bukan data sensitif; validasi isi mencegah SVG/HTML berbahaya diunggah sebagai "gambar". |
+| 17 | Tipe DB di-generate dari skema | Menghindari tipe manual yang menyimpang dari database. |
+| 18 | Pesan hasil aksi yang menghapus baris ditampilkan di level halaman/induk | Pesan di dalam baris yang dihapus ikut hilang (ditemukan saat E2E). |
 
 ## 9. Kesiapan offline (rencana, belum diimplementasi)
 
