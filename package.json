@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "db:test": "bash scripts/db-test.sh"
+    "db:test": "bash scripts/db-test.sh",
+    "db:types": "supabase gen types typescript --local --schema public > src/types/supabase.ts && prettier --write src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "prettier": "^3.9.9",
     "supabase": "^2.119.0",
     "tailwindcss": "^4",
     "typescript": "^5",
