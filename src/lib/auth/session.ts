@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HOME_PATH, LOGIN_PATH } from "@/config/routes";
 import { hasRole } from "@/lib/auth/roles";
-import type { SchoolTimezone, UserRole } from "@/types/database";
+import { isSchoolTimezone, type SchoolTimezone, type UserRole } from "@/types/database";
 
 const DEFAULT_TIMEZONE: SchoolTimezone = "Asia/Jakarta";
 
@@ -20,6 +20,8 @@ export type CurrentProfile = {
   role: UserRole;
   schoolId: string | null;
   schoolName: string | null;
+  /** Path in the `school-logos` bucket (see features/schools/storage.ts). */
+  schoolLogoPath: string | null;
   /** School timezone (WIB/WITA/WIT); platform default for super admins. */
   timezone: SchoolTimezone;
   isActive: boolean;
@@ -33,7 +35,7 @@ export const getCurrentProfile = cache(async (): Promise<CurrentProfile | null> 
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, email, role, school_id, is_active, schools(name, timezone)")
+    .select("id, full_name, email, role, school_id, is_active, schools(name, timezone, logo_url)")
     .eq("id", userId)
     .maybeSingle();
 
@@ -46,7 +48,8 @@ export const getCurrentProfile = cache(async (): Promise<CurrentProfile | null> 
     role: data.role,
     schoolId: data.school_id,
     schoolName: data.schools?.name ?? null,
-    timezone: data.schools?.timezone ?? DEFAULT_TIMEZONE,
+    schoolLogoPath: data.schools?.logo_url ?? null,
+    timezone: isSchoolTimezone(data.schools?.timezone) ? data.schools.timezone : DEFAULT_TIMEZONE,
     isActive: data.is_active,
   };
 });

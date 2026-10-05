@@ -54,3 +54,15 @@ export async function getSchool(id: string) {
   }
   return data;
 }
+
+/** Full profile of one school for the edit form (RLS: members of that school only). */
+export async function getSchoolProfile(id: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("schools")
+    .select("id, name, nsm, npsn, address, village, district, regency, province, phone, email, timezone, logo_url")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) console.error("[db] getSchoolProfile:", error.code, error.message);
+  return data;
+}

@@ -21,3 +21,10 @@ export function formatLongDate(timeZone: string, date: Date = new Date()): strin
     timeZone,
   }).format(date);
 }
+
+/** Format a calendar date ("YYYY-MM-DD", no time) as "13 Juli 2026" without timezone shifts. */
+export function formatDate(isoDate: string): string {
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+    new Date(`${isoDate}T00:00:00Z`),
+  );
+}

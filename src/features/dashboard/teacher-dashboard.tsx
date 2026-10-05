@@ -1,4 +1,8 @@
-import { BookOpen, Camera, ClipboardCheck, FileText, NotebookPen, Shapes, Sun } from "lucide-react";
+import { BookOpen, Camera, ClipboardCheck, FileText, Layers, NotebookPen, Shapes, Sun } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ErrorState } from "@/components/ui/error-state";
+import { listMyClasses } from "@/features/classes/queries";
+import { CLASS_TEACHER_ROLE_LABELS } from "@/features/classes/schemas";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { QuickActions, type QuickAction } from "./quick-actions";
@@ -12,9 +16,45 @@ const actions: QuickAction[] = [
   { label: "Cari Aktivitas", href: "/pembelajaran/aktivitas", icon: Shapes, tone: "accent", ready: false },
 ];
 
-export function TeacherDashboard() {
+export async function TeacherDashboard({ profileId }: { profileId: string }) {
+  const myClasses = await listMyClasses(profileId);
+
   return (
     <div className="space-y-8">
+      <section aria-labelledby="kelas-saya">
+        <h2 id="kelas-saya" className="mb-3 text-lg font-bold">
+          Kelas Saya
+        </h2>
+        {myClasses === null ? (
+          <ErrorState description="Daftar kelas belum bisa dimuat. Muat ulang halaman ini." />
+        ) : myClasses.length === 0 ? (
+          <EmptyState
+            icon={Layers}
+            title="Belum ditugaskan ke kelas"
+            description="Kepala sekolah akan menugaskan Anda ke kelas pada tahun ajaran aktif."
+          />
+        ) : (
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {myClasses.map((c) => (
+              <li key={c.id}>
+                <Card className="flex items-center gap-4 p-4">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-accent-50 text-lg font-bold text-accent-700">
+                    {c.level}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold">{c.name}</p>
+                    <p className="text-sm text-ink-muted">Tahun ajaran {c.yearName}</p>
+                    <Badge tone={c.role === "homeroom" ? "brand" : "neutral"} className="mt-1">
+                      {CLASS_TEACHER_ROLE_LABELS[c.role]}
+                    </Badge>
+                  </div>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       <section aria-labelledby="hari-ini">
         <h2 id="hari-ini" className="mb-3 text-lg font-bold">
           Pembelajaran Hari Ini

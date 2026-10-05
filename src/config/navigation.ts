@@ -3,6 +3,7 @@ import {
   BookOpen,
   Building2,
   CalendarDays,
+  CalendarRange,
   ClipboardCheck,
   FileDown,
   FileText,
@@ -78,10 +79,11 @@ const schoolAdminNav: NavGroup[] = [
   {
     label: "Sekolah",
     items: [
-      { label: "Profil Sekolah", href: "/sekolah", icon: School, ready: false },
+      { label: "Profil Sekolah", href: "/sekolah", icon: School, ready: true },
+      { label: "Tahun Ajaran", href: "/sekolah/tahun-ajaran", icon: CalendarRange, ready: true },
       { label: "Guru & Admin", href: "/sekolah/guru", icon: UserRound, ready: true },
       { label: "Siswa", href: "/sekolah/siswa", icon: Users, ready: false },
-      { label: "Kelas", href: "/sekolah/kelas", icon: Layers, ready: false },
+      { label: "Kelas", href: "/sekolah/kelas", icon: Layers, ready: true },
       { label: "Kurikulum", href: "/sekolah/kurikulum", icon: Palette, ready: false },
     ],
   },
@@ -144,7 +146,7 @@ export const NAVIGATION: Record<UserRole, NavGroup[]> = {
  */
 export const MOBILE_PRIMARY: Record<UserRole, string[]> = {
   teacher: ["/dashboard", "/pembelajaran/rpph", "/pembelajaran/aktivitas", "/anak/asesmen"],
-  school_admin: ["/dashboard", "/sekolah/guru", "/sekolah/siswa", "/monitoring/pembelajaran"],
+  school_admin: ["/dashboard", "/sekolah/guru", "/sekolah/kelas", "/sekolah/siswa"],
   super_admin: ["/dashboard", "/admin/sekolah", "/admin/tema", "/admin/aktivitas"],
 };
 

@@ -23,8 +23,8 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
           Kata sandi tersimpan. Gunakan kata sandi ini saat masuk berikutnya.
         </Alert>
       ) : null}
-      {profile.role === "teacher" ? <TeacherDashboard /> : null}
-      {profile.role === "school_admin" ? <SchoolAdminDashboard /> : null}
+      {profile.role === "teacher" ? <TeacherDashboard profileId={profile.id} /> : null}
+      {profile.role === "school_admin" ? <SchoolAdminDashboard schoolId={profile.schoolId!} /> : null}
       {profile.role === "super_admin" ? <SuperAdminDashboard /> : null}
     </>
   );
